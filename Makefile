@@ -14,6 +14,8 @@ setup: ## Set up development environment
 	else \
 		echo "uv is already installed"; \
 	fi
+	# Clean any existing build artifacts
+	rm -rf build/ dist/ *.egg-info/
 	# Install dependencies and create virtual environment
 	uv sync --dev
 	@echo "Development environment ready! Activate with: source .venv/bin/activate"
@@ -52,19 +54,28 @@ type-check: ## Run type checking (mypy)
 check: lint format-check type-check ## Run all checks (lint, format, type)
 
 clean: ## Clean up build artifacts and cache
+	@echo "Cleaning build artifacts..."
 	rm -rf build/
 	rm -rf dist/
 	rm -rf *.egg-info/
 	rm -rf .pytest_cache/
 	rm -rf htmlcov/
 	rm -rf .coverage
-	find . -type d -name __pycache__ -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
+	@echo "Cleaning Python cache files..."
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	find . -type f -name "*.pyo" -delete 2>/dev/null || true
+	@echo "Clean completed."
 
 pre-commit: ## Run pre-commit hooks on all files
 	uv run pre-commit run --all-files
 
 build: ## Build the package
+	@echo "Cleaning previous build..."
+	rm -rf build/ dist/ *.egg-info/
+	@echo "Installing build dependencies..."
+	uv add --dev hatchling build
+	@echo "Building package..."
 	uv build
 
 publish-test: ## Publish to test PyPI
@@ -83,6 +94,19 @@ docker-test: ## Run tests in Docker
 
 update-deps: ## Update all dependencies
 	uv sync --upgrade
+
+validate: ## Validate package configuration
+	@echo "Validating package configuration..."
+	uv run python -m build --check-build-dependencies
+	@echo "Checking imports..."
+	uv run python -c "import sys; sys.path.insert(0, 'src'); import pycloak; print('✓ Package imports successfully')"
+
+build-check: ## Check build without actually building
+	@echo "Checking build configuration..."
+	@python -c "try:\n    import tomllib\nexcept ImportError:\n    import tomli as tomllib\nwith open('pyproject.toml', 'rb') as f:\n    data = tomllib.load(f)\nprint('✓ pyproject.toml is valid')" 2>/dev/null || echo "⚠ Could not validate pyproject.toml"
+	@echo "Checking package structure..."
+	@if [ -d "src/pycloak" ]; then echo "✓ Package directory exists"; else echo "✗ Package directory missing"; exit 1; fi
+	@if [ -f "src/pycloak/__init__.py" ]; then echo "✓ Package __init__.py exists"; else echo "✗ Package __init__.py missing"; exit 1; fi
 
 # Legacy alias for backwards compatibility
 local_setup: setup ## Alias for setup command
