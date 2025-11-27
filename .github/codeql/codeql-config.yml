@@ -1,0 +1,13 @@
+name: "Keycloak Examples CodeQL Config"
+queries:
+  - uses: security-and-quality
+paths:
+  - src/
+  - tests/
+paths-ignore:
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.yml"
+  - "**/*.yaml"
+  - ".github/"
+  - "docs/"

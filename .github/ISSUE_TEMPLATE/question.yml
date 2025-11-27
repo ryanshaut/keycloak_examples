@@ -1,0 +1,55 @@
+name: Question
+description: Ask a question about using PyCloak or Keycloak
+title: "[Question]: "
+labels: ["question", "triage"]
+assignees:
+  - ryanshaut
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your question! Please check the [documentation](https://github.com/ryanshaut/keycloak_examples/blob/main/README.md) first.
+  - type: textarea
+    id: question
+    attributes:
+      label: What's your question?
+      description: Please be as specific as possible.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What are you trying to achieve? What have you tried so far?
+    validations:
+      required: false
+  - type: textarea
+    id: code
+    attributes:
+      label: Relevant Code
+      description: If applicable, please share the code you're working with.
+      render: python
+    validations:
+      required: false
+  - type: checkboxes
+    id: topic
+    attributes:
+      label: Topic Area
+      description: Which area does your question relate to?
+      options:
+        - label: Authentication flows (OAuth2/OIDC)
+        - label: Token management
+        - label: Admin API usage
+        - label: Client configuration
+        - label: Error handling
+        - label: Async/await usage
+        - label: Keycloak server setup
+        - label: Examples and tutorials
+        - label: Other
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other details that might help us answer your question.
+    validations:
+      required: false
