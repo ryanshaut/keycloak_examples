@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
@@ -92,7 +92,7 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Dependency Review
       uses: actions/dependency-review-action@v4
@@ -103,7 +103,7 @@ jobs:
     needs: [test, security-scan]
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
